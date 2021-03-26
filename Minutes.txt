@@ -1,4 +1,4 @@
-------------SOME DATE-------------
+------------22nd March-------------
 Tetris is our chosen problem
 Brendan chosen to put the project together at the end
 Others look into AI methods
