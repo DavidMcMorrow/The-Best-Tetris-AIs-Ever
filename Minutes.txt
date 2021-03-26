@@ -1,0 +1,12 @@
+------------24th March------------
+List of methods were doing:
+Cross entropy - Matt
+Genetic algorithm – Jack
+El Tetris – Dave
+Deep learning – Laura
+
+------------26th March------------
+Gave a verbal report on the algorithms.
+And decided to stick with the ones mentioned above.
+
+Sending Github and email ensuring we are good to kind of copy algorithms
