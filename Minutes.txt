@@ -1,5 +1,10 @@
+------------SOME DATE-------------
+Tetris is our chosen problem
+Brendan chosen to put the project together at the end
+Others look into AI methods
+
 ------------24th March------------
-List of methods were doing:
+List of methods we're doing:
 Cross entropy - Matt
 Genetic algorithm – Jack
 El Tetris – Dave
