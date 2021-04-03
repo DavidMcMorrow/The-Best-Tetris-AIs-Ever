@@ -28,7 +28,7 @@ class Tetris:
         self.run = False
         self.held_piece = []
         self.initial_grid = [[(0, 0, 0) for x in range(10)] for x in range(20)]
-
+        self.previous_grid = self.initial_grid
         self.total_lines_cleared = 0
         self.total_pieces_placed = 0
         self.score = 0
@@ -67,9 +67,14 @@ class Tetris:
     # returns properties of the simulated board
     def get_state_properties(self, grid):
         lines_cleared, board = cleared(grid)
+        height = getTheHeight(grid, self.previous_grid)
         number_of_holes = holes(board)
-        bumpiness, height = bumpiness_and_height(board)
-        return torch.FloatTensor([height, lines_cleared, number_of_holes])
+        rowTransitions = getBoardRowTransitions(board)
+        colTransitions = getBoardColTransitions(board)
+        sumeOfWells = getBoardWells(board)
+       
+        self.previous_grid = board
+        return torch.FloatTensor([height, lines_cleared, rowTransitions, colTransitions, number_of_holes, sumeOfWells]) 
         # return torch.FloatTensor([lines_cleared, number_of_holes, bumpiness, height])
 
     # Checks all possible moves and returns the properties of those moves
@@ -113,6 +118,7 @@ class Tetris:
                                     x, y = shape_pos[i]
                                     if y > -1:
                                         grid[y][x] = use_piece.color
+                                # print("self.get_state_properties(grid)", self.get_state_properties(grid))
                                 states[(x_move, z, k)] = self.get_state_properties(grid)
                             use_piece.x = normal_x
                             use_piece.y = normal_y
@@ -140,12 +146,13 @@ class Tetris:
                                     x, y = shape_pos[i]
                                     if y > -1:
                                         grid[y][x] = use_piece.color
-                                states[(x_move, z, k)] = self.get_state_properties(grid)
+                                states[(x_move, z, k)]= self.get_state_properties(grid)
                             use_piece.x = normal_x
                             use_piece.y = normal_y
                             grid = [row[:] for row in cp]
                         valid = True
                     use_piece.rotation = normal_rotate
+        # print("states", states)
         return states
 
     # Resets the game

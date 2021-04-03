@@ -4,6 +4,7 @@ import button
 import training_mode
 from settings import Setting
 
+
 # Default Settings
 settings = Setting()
 screen_width = settings.screen_width
@@ -21,10 +22,12 @@ play_vs_cheater_ai_button = button.Button(button_colour_off, button_centred, 100
                                           button_width, button_height, 'Train Cheater AI')
 play_vs_fair_ai_button = button.Button(button_colour_off, button_centred, 250,
                                        button_width, button_height, 'Train Fair AI')
-return_button = button.Button(button_colour_off, button_centred, 400, button_width, button_height, 'Return')
+play_vs_el_tetris_ai_button = button.Button(button_colour_off, button_centred, 400,
+                                       button_width, button_height, 'El Tetris')
+return_button = button.Button(button_colour_off, button_centred, 550, button_width, button_height, 'Return')
 
 # Array of Buttons
-buttons = [play_vs_cheater_ai_button, play_vs_fair_ai_button, return_button]
+buttons = [play_vs_cheater_ai_button, play_vs_fair_ai_button, play_vs_el_tetris_ai_button, return_button]
 
 
 # Creates Training Menu
@@ -43,6 +46,8 @@ def main():
                     go = training_mode.main("cheater", 4)
                 elif play_vs_fair_ai_button.is_over(pos):
                     go = training_mode.main("fair", 5)
+                elif play_vs_el_tetris_ai_button.is_over(pos):
+                    go = training_mode.elTetris()
                 elif return_button.is_over(pos):
                     go = False
             if event.type == pygame.MOUSEMOTION:

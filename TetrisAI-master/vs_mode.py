@@ -181,6 +181,8 @@ def ai(env, model, holder):
     next_steps = env.get_next_states()
     next_actions, next_states = zip(*next_steps.items())
     next_states = torch.stack(next_states).to(device)
+    print("next_states", next_states)
+    print("next_actions", next_actions)
 
     predictions = model(next_states)[:, 0]
     index = torch.argmax(predictions).item()

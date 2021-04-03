@@ -1,14 +1,8 @@
-"""
-@author: Viet Nguyen <nhviet1009@gmail.com>
-https://github.com/uvipen/Tetris-deep-Q-learning-pytorch
-"""
-
 import torch.nn as nn
 
-
-class DeepQNetwork(nn.Module):
-    def __init__(self, number_of_features=4):
-        super(DeepQNetwork, self).__init__()
+class ElTetrisNetwork(nn.Module):
+    def __init__(self, number_of_features=6):
+        super(ElTetrisNetwork, self).__init__()
 
         self.conv1 = nn.Sequential(nn.Linear(number_of_features, 64), nn.ReLU(inplace=True))
         self.conv2 = nn.Sequential(nn.Linear(64, 64), nn.ReLU(inplace=True))
@@ -26,5 +20,5 @@ class DeepQNetwork(nn.Module):
         x = self.conv1(x)
         x = self.conv2(x)
         x = self.conv3(x)
-        # print("X", x)
+
         return x
