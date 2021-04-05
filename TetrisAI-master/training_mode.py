@@ -281,18 +281,13 @@ def elTetris():
     os.makedirs(opt.log_path)
     writer = SummaryWriter(opt.log_path)
 
-    # model is the neural network
-    # model = DeepQNetwork(number_of_features).to(device)
-    # Optimises the model using the learning rate
-    # optimizer = torch.optim.Adam(model.parameters(), lr=opt.lr)
-    # measures the mean squared error between elements
     criterion = nn.MSELoss()
     # Gets the default states of the environment
     state = env.reset().to(device)
 
     # Limits amount of moves made
     steps = 0
-    max_step = 2000
+    max_step = 10000
 
     font_small = pygame.font.SysFont('Arial', 20)
     clock = pygame.time.Clock()
@@ -323,19 +318,12 @@ def elTetris():
         weightTotals = []
         previousGrid = []
         for weight in next_states:
-            # feature0 = -4.500158825082766 * weight[0]
-            # feature1 = 3.4181268101392694 * weight[1]
-            # feature2 = -3.2178882868487753 * weight[2]
-            # feature3 = -9.348695305445199 * weight[3]
-            # feature4 = -7.899265427351652 * weight[4]
-            # feature5 = -3.3855972247263626 * weight[5]
-            feature0 = -45* weight[0]
-            feature1 = 34 * weight[1]
-            feature2 = -32 * weight[2]
-            feature3 = -98 * weight[3]
-            feature4 = -79 * weight[4]
-            feature5 = -34 * weight[5]
-            # previousGrid.append(print(weight[6]))
+            feature0 = -4.500158825082766* weight[0]
+            feature1 = 3.4181268101392694 * weight[1]
+            feature2 = -3.2178882868487753 * weight[2]
+            feature3 = -9.348695305445199 * weight[3]
+            feature4 = -7.899265427351652 * weight[4]
+            feature5 = -3.3855972247263626 * weight[5]
             weightTotals.append(feature0 + feature1 + feature2 + feature3 + feature4 + feature5)
 
         maxIndex = -9999999
@@ -350,21 +338,6 @@ def elTetris():
                 maxIndex = i
                 maxValue = weightTotals[i].numpy()
 
-
-        # Evaluates model
-        # model.eval()
-
-        # with torch.no_grad():
-        #     predictions = model(next_states)[:, 0]
-        # Trains model
-        # model.train()
-        # if random_action:
-        #     index = randint(0, len(next_steps) - 1)
-        # else:
-        #     index = torch.argmax(predictions).item()
-
-        # next_state = next_states[index, :].to(device)
-        # action = next_actions[index]
         next_state = next_states[maxIndex, :].to(device)
         action = next_actions[maxIndex]
         # print("action", action)
@@ -372,8 +345,6 @@ def elTetris():
 
         # Gets next steps from environment
         reward, done = env.step(action)
-        # print("reward", reward)
-        # print("done", done)
         steps = steps + 1
 
         replay_memory.append([state, reward, next_state, done])

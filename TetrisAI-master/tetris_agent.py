@@ -32,12 +32,6 @@ def bumpiness_and_height(grid):
                 break
     for i in range(0, 9):
         average_bumps = average_bumps + abs(array_of_bump_heights[i] - array_of_bump_heights[i + 1])
-    # for i in range(0, 10):
-    #     height.append(abs(array_of_bump_heights[i] - 20))
-    
-    # print("height", height)
-    # print("height", max(height))
-    # maxHeight = max(height)
     return average_bumps, height
 
 
@@ -82,25 +76,20 @@ def getBoardWells(grid):
         sum_n = [ 0, 1, 3, 6, 10, 15, 21, 28, 36, 45, 55]
         wells = 0
         sum = 0
-
         for j in range( len(grid[1]) ):
             for i in range( len(grid) ):
                 if grid[i][j] == (0, 0, 0):
                     if (j-1<0 or grid[i][j-1] != (0, 0, 0)) and (j+1 >= 10 or grid[i][j+1] != (0, 0, 0)):
                         wells += 1
                     else:
-                        # print("sum_n", sum_n)
                         sum += sum_n[wells]
                         wells = 0
         return sum
 
 def getTheHeight(grid, previousGrid):
     for i in range(0, len(previousGrid)):
-        # print("previousGrid[i]", previousGrid[i])
-        # print("grid[i]", grid[i])
         if previousGrid[i] != grid[i]:
             result = 20 - i
-            # print("result", result)
             return result
         else:
             result = 0

@@ -72,7 +72,6 @@ class Tetris:
         rowTransitions = getBoardRowTransitions(board)
         colTransitions = getBoardColTransitions(board)
         sumeOfWells = getBoardWells(board)
-       
         self.previous_grid = board
         return torch.FloatTensor([height, lines_cleared, rowTransitions, colTransitions, number_of_holes, sumeOfWells]) 
         # return torch.FloatTensor([lines_cleared, number_of_holes, bumpiness, height])
