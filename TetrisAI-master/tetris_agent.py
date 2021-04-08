@@ -49,3 +49,51 @@ def holes(grid):
                 break
     return number_of_holes
 
+def getBoardRowTransitions(grid):
+    transition = 0
+    for i in range(len(grid) -1, 0, -1):
+        count = 0
+        for j in range( len(grid[1])-1 ):
+            if grid[i][j] != (0, 0, 0) :
+                count += 1
+            if grid[i][j] == (0, 0, 0) and grid[i][j+1] != (0, 0, 0):
+                transition += 1
+            if grid[i][j] != (0, 0, 0) and grid[i][j+1] == (0, 0, 0):
+                transition += 1
+    return transition
+
+
+def getBoardColTransitions(grid):
+    transition = 0
+    for j in range(len(grid[1])):
+        for i in range( len(grid)-1, 1, -1 ):
+            if grid[i][j] == (0, 0, 0) and grid[i-1][j] != (0, 0, 0):
+                transition += 1
+            if grid[i][j] != (0, 0, 0) and grid[i-1][j] == (0, 0, 0):
+                transition += 1
+    return transition
+
+def getBoardWells(grid):
+    sum_n = [ 0, 1, 3, 6, 10, 15, 21, 28, 36, 45, 55, 65, 75, 85, 95, 110, 120, 130, 140, 150]
+    wells = 0
+    sum = 0
+    for j in range( len(grid[1]) ):
+        for i in range( len(grid) ):
+            if grid[i][j] == (0, 0, 0):
+                if (j-1<0 or grid[i][j-1] != (0, 0, 0)) and (j+1 >= 10 or grid[i][j+1] != (0, 0, 0)):
+                    wells += 1
+                else:
+                    if wells >= 11: #need to look into this
+                        wells = 10
+                    sum += sum_n[wells]
+                    wells = 0
+    return sum
+
+def getTheHeight(grid, previousGrid):
+    for i in range(0, len(previousGrid)):
+        if previousGrid[i] != grid[i]:
+            result = 20 - i
+            return result
+        else:
+            result = 0
+    return result

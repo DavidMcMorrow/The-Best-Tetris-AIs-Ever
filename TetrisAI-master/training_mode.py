@@ -15,6 +15,7 @@ from deep_q_learning import DeepQNetwork
 from tetris_cheater import Tetris as Cheater
 from tetris_fair import Tetris as Fair
 from collections import deque
+from train_cross_entrophy import Tetris as cross_entrophy
 matplotlib.use("Agg")
 
 
@@ -247,3 +248,239 @@ def main(training_type, number_of_features):
     opt = get_args()
     train(opt, training_type, number_of_features)
     return True
+
+def crossEntrophyTrainWeights():
+    opt = get_args()
+    screen = pygame.display.set_mode((1400, 700))
+    screen.fill((0, 0, 0))
+    env = cross_entrophy(screen, "train", True)
+
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    return_button = button.Button((61, 97, 128), 575, 625, 200, 50, 'Return')
+
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed(123)
+    else:
+        torch.manual_seed(123)
+    if os.path.isdir(opt.log_path):
+        shutil.rmtree(opt.log_path)
+
+    # Creates a folder for the given log path
+    os.makedirs(opt.log_path)
+    writer = SummaryWriter(opt.log_path)
+    
+    
+    max_step = 10000000000
+    font_small = pygame.font.SysFont('Arial', 20)
+    clock = pygame.time.Clock()
+
+    n_weights = 20
+    mean = 0
+    std = 2
+    weightsPop = [mean + std*np.random.randn(6) for i_weight in range(n_weights)]
+    # print("weights pop", weightsPop)
+    maxScore = -9999999
+    max_weights = [0, 0, 0, 0, 0, 0]
+    lastMaxScoreFound = 0
+
+    for i in range(0, 100):
+        score = []
+        for weights in weightsPop:
+            # print(weights)
+
+            # Gets the default states of the environment
+            state = env.reset().to(device)
+            done = False
+            steps = 0
+
+
+            while not done or (max_step <= steps):
+  
+                pygame.display.flip()
+                
+                next_steps = env.get_next_states()
+
+                next_actions, next_states = zip(*next_steps.items())
+                next_states = torch.stack(next_states).to(device)
+                
+                weightTotals = []
+                previousGrid = []
+                features = []
+                for state in next_states:
+                    features = []
+                    features.append(weights[0] * state[0])
+                    features.append(weights[1] * state[1])
+                    features.append(weights[2] * state[2])
+                    features.append(weights[3] * state[3])
+                    features.append(weights[4] * state[4])
+                    features.append(weights[5] * state[5])
+                    weightTotals.append(sum(features))
+                # print("weight totals", weightTotals)
+
+                maxIndex = -999999
+                maxValue = -999999
+
+                for i in range(0, len(weightTotals)):
+                    if weightTotals[i].numpy() > maxValue:
+                        maxIndex = i
+                        maxValue = weightTotals[i].numpy()
+
+                next_state = next_states[maxIndex, :].to(device)
+                action = next_actions[maxIndex]
+
+                # Gets next steps from environment
+                reward, done = env.step(action)
+                steps = env.total_pieces_placed
+
+                #displays game
+                area = pygame.Rect(0, 75, 900, 625)
+                return_button.draw(screen)
+                fps = font_small.render("fps:" + str(int(clock.get_fps())), True, pygame.Color('white'))
+                screen.blit(fps, (10, 75))
+                clock.tick(100)
+                pygame.display.update(area)
+                if (done == True) or (max_step <= steps):
+                    final_score = env.score
+                    score.append(final_score)
+                    print("final score", final_score)
+                    final_pieces_placed = env.total_pieces_placed
+                    final_cleared_lines = env.total_lines_cleared
+                    break
+                else:
+                    state = next_state
+
+        #determine which weights performed best
+        newWeightsAndScores = []
+        for i in range(0, len(weightsPop)):
+            newWeightsAndScores.append((weightsPop[i], score[i]))
+        sortedWeightsAndScores = sorted(newWeightsAndScores, key=lambda tup: tup[1])
+        # print("weights sorted by value \n:", sortedWeightsAndScores)
+
+        eliteWeights = []
+        # print("best weights")
+        for i in range(14, 20):
+            print(sortedWeightsAndScores[i][0])
+            eliteWeights.append(sortedWeightsAndScores[i][0])
+        # print("weights best \n:", eliteWeights)
+        
+        #create a new set of weights based of the best performing weights
+        mean = np.array(eliteWeights).mean()
+        std = np.array(eliteWeights).std()
+        weightsPop = [mean + std*np.random.randn(6) for i_weight in range(n_weights)]
+
+
+        if(sortedWeightsAndScores[19][1] > maxScore):
+            print("!!!!!!!!!!!! new max score !!!!!!!!!!!!!!!!!!! - ", sortedWeightsAndScores[19][1])
+            print("weights - ", sortedWeightsAndScores[19][0])
+            maxScore = sortedWeightsAndScores[19][1]
+            max_weights = sortedWeightsAndScores[19][0]
+            lastMaxScoreFound = 0
+        else:
+            lastMaxScoreFound =+ 1
+        
+        if lastMaxScoreFound >10:
+            print("no new max scores")
+            break
+
+    print("\nmax score: ", maxScore)
+    print("\nMax Weights: ", max_weights)
+
+# new max score achieved -  43165
+# weights -  [-2.25048569 -0.68311994 -2.19572577 -2.19474798 -1.52209894 -0.68103168]
+# stopped due to training time issues
+
+def testCrossEntrophy():
+    opt = get_args()
+    screen = pygame.display.set_mode((1400, 700))
+    screen.fill((0, 0, 0))
+    env = cross_entrophy(screen, "Train", True)
+
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    return_button = button.Button((61, 97, 128), 575, 625, 200, 50, 'Return')
+
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed(2)
+    else:
+        torch.manual_seed(2)
+    if os.path.isdir(opt.log_path):
+        shutil.rmtree(opt.log_path)
+
+    # Creates a folder for the given log path
+    os.makedirs(opt.log_path)
+    writer = SummaryWriter(opt.log_path)
+    
+    max_step = 10000000000
+    font_small = pygame.font.SysFont('Arial', 20)
+    clock = pygame.time.Clock()
+
+    state = env.reset().to(device)
+    done = False
+    steps = 0
+
+    while not done or (max_step <= steps):
+
+        pygame.display.flip()
+        next_steps = env.get_next_states()
+
+        next_actions, next_states = zip(*next_steps.items())
+        next_states = torch.stack(next_states).to(device)
+        
+        weightTotals = []
+        previousGrid = []
+        features = []
+        for state in next_states: #weights taken from training the model
+            features = []
+            features.append(-2.25048569 * state[0])
+            features.append(-0.68311994 * state[1])
+            features.append(-2.19572577 * state[2])
+            features.append(-2.19474798 * state[3])
+            features.append(-1.52209894 * state[4])
+            features.append(-0.68103168 * state[5])
+            weightTotals.append(sum(features))
+        # print("weight totals", weightTotals)
+
+        maxIndex = -999999
+        maxValue = -999999
+
+        for i in range(0, len(weightTotals)):
+            if weightTotals[i].numpy() > maxValue:
+                maxIndex = i
+                maxValue = weightTotals[i].numpy()
+
+        next_state = next_states[maxIndex, :].to(device)
+        action = next_actions[maxIndex]
+
+        # Gets next steps from environment
+        reward, done = env.step(action)
+        steps = env.total_pieces_placed
+
+        #displays game
+        area = pygame.Rect(0, 75, 900, 625)
+        return_button.draw(screen)
+        fps = font_small.render("fps:" + str(int(clock.get_fps())), True, pygame.Color('white'))
+        screen.blit(fps, (10, 75))
+        clock.tick(100)
+        pygame.display.update(area)
+        if (done == True) or (max_step <= steps):
+            final_score = env.score
+            final_pieces_placed = env.total_pieces_placed
+            final_cleared_lines = env.total_lines_cleared
+            print("Score: ", final_score)
+            print("Num of Pieces Placed: ", final_pieces_placed)
+            print("Num of lines cleared: ", final_cleared_lines)
+            break
+        else:
+            state = next_state
+
+#seed 2 
+# Score:  11987
+# Num of Pieces Placed:  7296
+# Num of lines cleared:  2904
+    
+# Score:  7831
+# Num of Pieces Placed:  4782
+# Num of lines cleared:  1899
+
+# Score:  8671
+# Num of Pieces Placed:  5323
+# Num of lines cleared:  2116

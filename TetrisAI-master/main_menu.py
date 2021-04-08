@@ -3,6 +3,7 @@ import sys
 import button
 import training_selection_screen
 import vs_selection_screen
+import training_mode
 import os
 from settings import Setting
 
@@ -26,11 +27,12 @@ button_centred = screen_centre - button_width / 2
 
 # Creating menu buttons
 train_ai_button = button.Button(button_colour_off, button_centred, 100, button_width, button_height, 'Train AI')
-play_vs_ai_button = button.Button(button_colour_off, button_centred, 250, button_width, button_height, 'Play Vs AI')
+play_vs_ai_button = button.Button(button_colour_off, button_centred, 200, button_width, button_height, 'Play Vs AI')
+cross_entropy_button = button.Button(button_colour_off, button_centred, 300, button_width, button_height, 'Cross Entrophy')
 quit_button = button.Button(button_colour_off, button_centred, 400, button_width, button_height, 'Quit')
 
 # Array of Buttons
-buttons = [train_ai_button, play_vs_ai_button, quit_button]
+buttons = [train_ai_button, play_vs_ai_button, cross_entropy_button, quit_button]
 
 # Set the caption for the window
 pygame.display.set_caption("Tetris")
@@ -50,6 +52,9 @@ def main():
                     vs_selection_screen.main()
                 if quit_button.is_over(pos):
                     sys.exit()
+                if cross_entropy_button.is_over(pos):
+                    # training_mode.crossEntrophyTrainWeights() # used to determine the weights for the test function
+                    training_mode.testCrossEntrophy() # used to test the algorithim on the weights learned in the training function
             if event.type == pygame.MOUSEMOTION:
                 for x in range(len(buttons)):
                     if buttons[x].is_over(pos):
