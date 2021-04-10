@@ -15,6 +15,7 @@ from deep_q_learning import DeepQNetwork
 from tetris_cheater import Tetris as Cheater
 from tetris_fair import Tetris as Fair
 from collections import deque
+
 matplotlib.use("Agg")
 
 
@@ -22,16 +23,16 @@ def get_args():
     parser = argparse.ArgumentParser(
         """Implementation of Deep Q Network to play Tetris""")
     parser.add_argument("--batch_size", type=int, default=512)
-    parser.add_argument("--lr", type=float, default=5e-4)
+    parser.add_argument("--lr", type=float, default=1e-3)
     parser.add_argument("--gamma", type=float, default=0.99)
     parser.add_argument("--initial_epsilon", type=float, default=1)
-    parser.add_argument("--final_epsilon", type=float, default=5e-4)
+    parser.add_argument("--final_epsilon", type=float, default=7.5e-4)
     parser.add_argument("--saved_path", type=str, default="trained_models")
     parser.add_argument("--log_path", type=str, default="tensorboard")
-    parser.add_argument("--save_interval", type=int, default=1000)
+    parser.add_argument("--save_interval", type=int, default=250)
     parser.add_argument("--num_decay_epochs", type=float, default=2000)
-    parser.add_argument("--num_epochs", type=int, default=3000)
-    parser.add_argument("--replay_memory_size", type=int, default=30000)
+    parser.add_argument("--num_epochs", type=int, default=2500)
+    parser.add_argument("--replay_memory_size", type=int, default=45000)
 
     args = parser.parse_args()
     return args
@@ -177,14 +178,13 @@ def train(opt, training_type, number_of_features):
         writer.add_scalar('Train/Cleared lines', final_cleared_lines, epoch - 1)
 
         if epoch > 0 and epoch % opt.save_interval == 0:
-            torch.save(model, "{}/{}_tetris_{}".format(opt.saved_path, training_type, epoch))
+            torch.save(model, "{}/{}_tetris_{}_4layer".format(opt.saved_path, training_type, epoch))
 
-    torch.save(model, "{}/{}_tetris".format(opt.saved_path, training_type))
+    torch.save(model, "{}/{}_tetris_{}_4layer".format(opt.saved_path, training_type, epoch))
     writer.close()
     display(screen)
 
 
-# Draws graph
 def graph_results(score, length):
     fig = pylab.figure(figsize=[4, 4], dpi=90)
     ax = fig.gca()

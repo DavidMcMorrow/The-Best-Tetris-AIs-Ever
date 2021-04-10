@@ -15,6 +15,7 @@ class Tetris:
         self.top_left_y = 90
 
         self.locked_positions = {}
+        pygame.font.init()
         self.font_small = pygame.font.SysFont('Arial', 20)
         font = pygame.font.SysFont('Arial', 40)
         self.label = font.render('AI Player', 1, (255, 255, 255))

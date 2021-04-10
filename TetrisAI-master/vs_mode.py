@@ -1,4 +1,6 @@
 import pygame
+from pip._internal import resolution
+
 import tetris_human
 from settings import Setting
 import torch
@@ -22,14 +24,15 @@ button_centred = screen_centre - button_width / 2
 def start(screen, saved_path="fair_tetris", mode="vs"):
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
+    #Change seed here -------------------------------------------------------------------------------------------------
     pygame.display.set_caption(saved_path)
     if torch.cuda.is_available():
-        torch.cuda.manual_seed(123)
+        torch.cuda.manual_seed(1)
     else:
-        torch.manual_seed(123)
+        torch.manual_seed(1)
 
     # Loads the model
-    model = torch.load(("trained_models/{}".format(saved_path)), map_location=lambda storage, loc: storage).to(device)
+    model = torch.load(("trained_models/{}_2000_4layer".format(saved_path)), map_location=lambda storage, loc: storage).to(device)
     model.eval()
 
     screen.fill((0, 0, 0))
@@ -169,10 +172,18 @@ def solo_mode(return_button, env, model, screen, font_small):
         return_button.draw(screen)
         fps = font_small.render("fps:" + str(int(clock.get_fps())), True, pygame.Color('white'))
         screen.blit(fps, (10, 75))
-        clock.tick(200)
+        clock.tick(100)
         pygame.display.update(area)
+        if env.total_pieces_placed % 25000 == 0 or env.total_pieces_placed == 250000:
+            print("LINES CLEARED:", env.total_lines_cleared, "-----", "PIECES PLACED", env.total_pieces_placed, "-----",
+                  "SCORE", env.score, "\n")
+        if env.total_pieces_placed == 250000:
+            quit()
         if won:
+            print("LINES CLEARED:", env.total_lines_cleared, "-----", "PIECES PLACED", env.total_pieces_placed, "-----",
+                  "SCORE", env.score, "\n")
             env.reset()
+            quit()
 
 
 # Controls Agent

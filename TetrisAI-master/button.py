@@ -6,6 +6,7 @@ class Button:
         self.color = color
         self.x = x
         self.y = y
+        pygame.font.init()
         self.width = button_width
         self.height = button_height
         self.font = pygame.font.SysFont('Arial', 30)

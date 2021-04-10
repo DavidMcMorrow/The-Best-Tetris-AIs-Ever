@@ -7,6 +7,7 @@ import os
 from settings import Setting
 
 pygame.init()
+pygame.font.init()
 # Centres the screen
 os.environ['SDL_VIDEO_CENTERED'] = '1'
 

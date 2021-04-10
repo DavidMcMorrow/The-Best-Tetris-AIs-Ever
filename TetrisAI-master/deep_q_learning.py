@@ -12,7 +12,8 @@ class DeepQNetwork(nn.Module):
 
         self.conv1 = nn.Sequential(nn.Linear(number_of_features, 64), nn.ReLU(inplace=True))
         self.conv2 = nn.Sequential(nn.Linear(64, 64), nn.ReLU(inplace=True))
-        self.conv3 = nn.Sequential(nn.Linear(64, 1))
+        self.conv3 = nn.Sequential(nn.Linear(64, 32), nn.ReLU(inplace=True))
+        self.conv4 = nn.Sequential(nn.Linear(32, 1))
 
         self._create_weights()
 
@@ -26,5 +27,6 @@ class DeepQNetwork(nn.Module):
         x = self.conv1(x)
         x = self.conv2(x)
         x = self.conv3(x)
+        x = self.conv4(x)
 
         return x
