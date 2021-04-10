@@ -259,6 +259,11 @@ def main(training_type, number_of_features):
     return True
 
 
+def func_iemghfta():
+    
+    return 
+
+
 def elTetris():
     print("in new function")
     opt = get_args()
@@ -266,14 +271,14 @@ def elTetris():
     screen = pygame.display.set_mode((1400, 700))
     screen.fill((0, 0, 0))
     env = El_Tetris(screen, "train", True)
-    print("env", env)
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     return_button = button.Button((61, 97, 128), 575, 625, 200, 50, 'Return')
 
     if torch.cuda.is_available():
-        torch.cuda.manual_seed(123)
+        torch.cuda.manual_seed(4)
     else:
-        torch.manual_seed(123)
+        torch.manual_seed(4)
+        
     if os.path.isdir(opt.log_path):
         shutil.rmtree(opt.log_path)
 
@@ -287,7 +292,7 @@ def elTetris():
 
     # Limits amount of moves made
     steps = 0
-    max_step = 10000
+    max_step = 250000
 
     font_small = pygame.font.SysFont('Arial', 20)
     clock = pygame.time.Clock()
@@ -297,52 +302,55 @@ def elTetris():
 
     epoch = 0
     score = []
-    # return_button = button.Button((61, 97, 128), 575, 625, 200, 50, 'Return')
-
+    opt.num_epochs = 1
     pygame.display.flip()
-    while epoch < opt.num_epochs:
+    done = False
+    while done == False:
         next_steps = env.get_next_states()
-        # movesAndWeights = env.get_next_states()
-        # print("movesAndWeights", movesAndWeights)
-        # Decides to do exploration or exploitation
-        # epsilon = opt.final_epsilon + (max(opt.num_decay_epochs - epoch, 0) * (
-        #         opt.initial_epsilon - opt.final_epsilon) / opt.num_decay_epochs)
-        # u = random()
-        # random_action = u <= epsilon
         next_actions, next_states = zip(*next_steps.items())
         next_states = torch.stack(next_states).to(device)
 
-        # print("next_actions", next_actions)
-        # print("next_states", next_states)
-
         weightTotals = []
         previousGrid = []
-        for weight in next_states:
-            feature0 = -4.500158825082766* weight[0]
-            feature1 = 3.4181268101392694 * weight[1]
-            feature2 = -3.2178882868487753 * weight[2]
-            feature3 = -9.348695305445199 * weight[3]
-            feature4 = -7.899265427351652 * weight[4]
-            feature5 = -3.3855972247263626 * weight[5]
+        AllPriorities = []
+        for i in range(0, len(next_states)):
+            # print("next_states", next_states[i])
+            # feature0 = -45 * next_states[i][0]
+            # feature1 = 34 * next_states[i][1]
+            # feature2 = -32 * next_states[i][2]
+            # feature3 = -93 * next_states[i][3]
+            # feature4 = -79  * next_states[i][4]
+            # feature5 = -34 * next_states[i][5]
+
+            feature0 = -4.500158825082766  * next_states[i][0]
+            feature1 = 3.4181268101392694  * next_states[i][1]
+            feature2 = -3.2178882868487753 * next_states[i][2]
+            feature3 = -9.348695305445199  * next_states[i][3]
+            feature4 = -7.899265427351652  * next_states[i][4]
+            feature5 = -3.3855972247263626 * next_states[i][5]
+            # print("next_actions", abs(next_actions[i][1]))
+            AllPriorities.append(100 * abs(next_actions[i][0]) + next_actions[i][1])
             weightTotals.append(feature0 + feature1 + feature2 + feature3 + feature4 + feature5)
 
         maxIndex = -9999999
         maxValue = -9999999
+        maxsPriority = 9999999
 
         for i in range(0, len(weightTotals)):
-            # print("weightTotals", weightTotals[i].numpy())
-            # print("maxValue", maxValue)
-            # print("if", weightTotals[i].numpy() > maxValue)
             if weightTotals[i].numpy() > maxValue:
-                # print("HERERERERRE")
                 maxIndex = i
                 maxValue = weightTotals[i].numpy()
+                maxsPriority = AllPriorities[i]
+            elif weightTotals[i].numpy() == maxValue:
+                if (AllPriorities[i]) < maxsPriority:
+                    maxIndex = i
+                    maxValue = weightTotals[i].numpy()
+                    maxsPriority = AllPriorities[i]
+
 
         next_state = next_states[maxIndex, :].to(device)
         action = next_actions[maxIndex]
-        # print("action", action)
-
-
+        
         # Gets next steps from environment
         reward, done = env.step(action)
         steps = steps + 1
@@ -369,10 +377,26 @@ def elTetris():
         screen.blit(fps, (10, 75))
         clock.tick(100)
         pygame.display.update(area)
-        if done or (max_step <= steps):
+        if steps % 25000 == 0:
+            print("Step", steps)
+            print("----------------------")
+            print("Score", env.score)
+            print("pieces_placed", env.total_pieces_placed)
+            print("cleared_lines", env.total_lines_cleared)
+            print("----------------------")
+
+        
+        if done or max_step == steps:
+            done = True
+            print("Done!!!!!!", done)
+            print("----------------------")
             final_score = env.score
             final_pieces_placed = env.total_pieces_placed
             final_cleared_lines = env.total_lines_cleared
+            print("Final Score", final_score)
+            print("final_pieces_placed", final_pieces_placed)
+            print("final_cleared_lines", final_cleared_lines)
+            print("----------------------")
             state = env.reset().to(device)
             steps = 0
         else:
@@ -380,6 +404,7 @@ def elTetris():
             continue
         if len(replay_memory) < opt.replay_memory_size / 10:
             continue
+        
         score.append(final_score)
         epoch += 1
         batch = sample(replay_memory, min(len(replay_memory), opt.batch_size))
@@ -388,33 +413,21 @@ def elTetris():
         reward_batch = torch.from_numpy(np.array(reward_batch, dtype=np.float32)[:, None]).to(device)
         next_state_batch = torch.stack(tuple(state for state in next_state_batch)).to(device)
 
-        # q_values = model(state_batch)
-        # model.eval()
-        # with torch.no_grad():
-        #     next_prediction_batch = model(next_state_batch)
-        # model.train()
-
-        y_batch = torch.cat(
-            tuple(reward if done else reward + opt.gamma * prediction for reward, done, prediction in
-                  zip(reward_batch, done_batch, next_prediction_batch)))[:, None]
-
-        optimizer.zero_grad()
-        loss = criterion(q_values, y_batch)
-        loss.backward()
-        optimizer.step()
-        graph_results(score, opt.num_epochs)
+        # optimizer.zero_grad()
+        # loss = criterion(q_values, y_batch)
+        # loss.backward()
+        # optimizer.step()
+        # graph_results(score, opt.num_epochs)
 
         writer.add_scalar('Train/Score', final_score, epoch - 1)
         writer.add_scalar('Train/Tetrominoes', final_pieces_placed, epoch - 1)
         writer.add_scalar('Train/Cleared lines', final_cleared_lines, epoch - 1)
 
-        # if epoch > 0 and epoch % opt.save_interval == 0:
-            # torch.save(model, "{}/{}_tetris_{}".format(opt.saved_path, training_type, epoch))
+        if epoch > 0 and epoch % opt.save_interval == 0:
+            torch.save(model, "{}/{}_tetris_{}".format(opt.saved_path, training_type, epoch))
 
-    # torch.save(model, "{}/{}_tetris".format(opt.saved_path, training_type))
+    torch.save(model, "{}/{}_tetris".format(opt.saved_path, training_type))
     writer.close()
     display(screen)
 
     # Set and refresh screen
-   
-    

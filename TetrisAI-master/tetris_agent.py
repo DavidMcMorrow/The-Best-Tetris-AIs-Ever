@@ -87,10 +87,17 @@ def getBoardWells(grid):
         return sum
 
 def getTheHeight(grid, previousGrid):
+    results = []
     for i in range(0, len(previousGrid)):
         if previousGrid[i] != grid[i]:
             result = 20 - i
-            return result
+            results.append(result)
+            # return result
         else:
             result = 0
-    return result
+    # print("len(result)", len(results))
+    if(results == []):
+        height = 0
+    else:
+        height = (results[0] + results[len(results) - 1])/2 
+    return height

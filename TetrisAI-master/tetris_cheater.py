@@ -146,6 +146,7 @@ class Tetris:
                             grid = [row[:] for row in cp]
                         valid = True
                     use_piece.rotation = normal_rotate
+        
         return states
 
     # Resets the game
