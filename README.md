@@ -57,7 +57,7 @@ The following screen will be seen and you select "Train Fair AI" and the project
 
 -------------How to run the cross entrophy algorithim -------------------
 
-Move to the cross entropy branch on this repository.
+Move to the cross-entropy branch on this repository.
 
 Run main_menu.py, using python main_menu.py
 
