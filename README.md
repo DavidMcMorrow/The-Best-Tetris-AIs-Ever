@@ -24,7 +24,7 @@ The following screen will be seen and you select El-Tetris and the project will 
 
 -----How to run Genetic Algorithm-----
 
-Move to the geneticAlgorithm Branch on this repository.
+Move to the geneticAlg Branch on this repository.
 
 Run main_menu.py, using python main_menu.py
 
