@@ -13,6 +13,8 @@ El Tetris write up and code was done by David McMorrow (16338955)
 
 Genetic Algorithm write up and code was done by Jack Mac Namara (16321927)
 
+Cross entrophy write up and code was done by Matthew Runswick (16316898)
+
 -----How to run El Tetris-----
 
 Move to the el tetris Branch on this repository.
@@ -40,3 +42,16 @@ From this screen you select "Train AI"
 
 The following screen will be seen and you select "Train Fair AI" and the project will run from there.
 ![Screenshot 2021-04-21 at 15 33 21](https://user-images.githubusercontent.com/47041809/115571543-01edab00-a2b7-11eb-90e3-2f2d1c3ce830.png)
+
+
+-------------How to run the cross entrophy algorithim -------------------
+Move to the cross entropy branch on this repository.
+
+Run main_menu.py, using python main_menu.py
+
+The you will see a screen similar to those displayed above, select the cross entrophy button and the model will start to play tetris.
+
+There are two functions, one to train the model and one to test the choosen (trained) model. You can switch between modes by toggeling between the two lines of code shown below, currently it is set that the model just plays with the trained weights. This code is located on line 56 and 57 of the main_menu.py file.
+![image](https://user-images.githubusercontent.com/47088034/115581305-cc998b00-a2bf-11eb-909a-ddc376819c9c.png)
+
+
