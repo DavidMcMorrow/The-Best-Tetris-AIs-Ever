@@ -5,6 +5,7 @@ This repo contains the work for the group assignment in the Semester 2 group ass
 
 
 -----How to run El Tetris-----
+
 Remove to the el tetris Branch on this repository.
 
 Run main_menu.py, using <python main_menu.py
