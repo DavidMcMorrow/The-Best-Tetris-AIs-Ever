@@ -2,7 +2,8 @@
 CS7IS2-A-SEM101-202021: ARTIFICAL INTELLIGENCE
 
 This repo contains the work for the group assignment in the Semester 2 group assignment.
-
+-----Group Contributions-----
+El Tetris write up and code was done by David McMorrow (16338955)
 
 -----How to run El Tetris-----
 
