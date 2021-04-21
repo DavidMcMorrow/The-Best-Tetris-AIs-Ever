@@ -66,4 +66,6 @@ The you will see a screen similar to those displayed above, select the cross ent
 There are two functions, one to train the model and one to test the choosen (trained) model. You can switch between modes by toggeling between the two lines of code shown below, currently it is set that the model just plays with the trained weights. This code is located on line 56 and 57 of the main_menu.py file.
 ![image](https://user-images.githubusercontent.com/47088034/115581305-cc998b00-a2bf-11eb-909a-ddc376819c9c.png)
 
+NOTE: if you click off of the tetris screen it can sometimes freeze, this is just a visual problem, the code is still running in the background
+
 
