@@ -16,6 +16,8 @@ Genetic Algorithm write up and code was done by Jack Mac Namara (16321927)
 Cross entrophy write up and code was done by Matthew Runswick (16316898)
 
 
+
+
 --------How to run the code ---------
 
 The implementation of each of the algorithims is done on a seperate branch in this repository.
