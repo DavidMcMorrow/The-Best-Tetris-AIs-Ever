@@ -7,6 +7,10 @@ This repo contains the work for the group assignment in the Semester 2 group ass
 
 https://tcdud-my.sharepoint.com/:f:/g/personal/jmacnama_tcd_ie/EvYgt8N4Yh5MgrR_l9ZuQ6IBo6dGRTPRFofDSEA-d0uUvA?e=ur6rvi
 
+-----Report Link-----
+
+https://www.overleaf.com/read/qprzkfmpzvwr
+
 -----Group Contributions-----
 
 El Tetris write up and code was done by David McMorrow (16338955)
@@ -15,7 +19,7 @@ Genetic Algorithm write up and code was done by Jack Mac Namara (16321927)
 
 Cross entrophy write up and code was done by Matthew Runswick (16316898)
 
-
+Deep Q learning write up and code was done by Laura Fortune (16322647)
 
 
 --------How to run the code ---------
@@ -69,3 +73,16 @@ There are two functions, one to train the model and one to test the choosen (tra
 NOTE: if you click off of the tetris screen it can sometimes freeze, this is just a visual problem, the code is still running in the background
 
 
+---------How to run the deep q learning algorithim -------------------
+
+Move to the deep q learning branch on this repository.
+
+Run main_menu.py, using python main_menu.py
+
+You will see a screen similar to those displayed above. To see the network training select 'Train AI', the following screen will appear and you can select 'Train Fair AI'
+
+![image](https://user-images.githubusercontent.com/45573478/115695822-04551100-a35a-11eb-9afe-5f7c8fc58815.png)
+
+To see the trained model play select 'Play vs AI' on the original menu screen, on the new screen select the 'Watch' button located beside 'Play vs Fair AI'
+
+![image](https://user-images.githubusercontent.com/45573478/115696253-69106b80-a35a-11eb-94e6-a799cfc337be.png)
