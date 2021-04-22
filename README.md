@@ -81,8 +81,8 @@ Run main_menu.py, using python main_menu.py
 
 You will see a screen similar to those displayed above. To see the network training select 'Train AI', the following screen will appear and you can select 'Train Fair AI'
 
-![image](https://user-images.githubusercontent.com/45573478/115695822-04551100-a35a-11eb-9afe-5f7c8fc58815.png)
+<a href="url"><img src="https://user-images.githubusercontent.com/45573478/115695822-04551100-a35a-11eb-9afe-5f7c8fc58815.png" height="250" width="300" ></a>
 
 To see the trained model play select 'Play vs AI' on the original menu screen, on the new screen select the 'Watch' button located beside 'Play vs Fair AI'
 
-![image](https://user-images.githubusercontent.com/45573478/115696253-69106b80-a35a-11eb-94e6-a799cfc337be.png)
+<a href="url"><img src="https://user-images.githubusercontent.com/45573478/115696253-69106b80-a35a-11eb-94e6-a799cfc337be.png" height="250" width="300" ></a>
