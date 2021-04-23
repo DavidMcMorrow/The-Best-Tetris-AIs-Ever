@@ -11,7 +11,11 @@ https://tcdud-my.sharepoint.com/:f:/g/personal/jmacnama_tcd_ie/EvYgt8N4Yh5MgrR_l
 
 https://www.overleaf.com/read/qprzkfmpzvwr
 
+-----Repo Link-----
+
+
 -----Group Contributions-----
+Analysed the results and wrote the report by Brendan O'Connell (16319077)
 
 El Tetris write up and code was done by David McMorrow (16338955)
 
@@ -20,7 +24,6 @@ Genetic Algorithm write up and code was done by Jack Mac Namara (16321927)
 Cross entrophy write up and code was done by Matthew Runswick (16316898)
 
 Deep Q learning write up and code was done by Laura Fortune (16322647)
-
 
 --------How to run the code ---------
 
